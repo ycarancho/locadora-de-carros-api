@@ -2,10 +2,10 @@
 
 namespace App\Api\Utils\ArchiveTratament;
 
-use App\Api\Utils\ArchiveTratament\ArchiveContracts\Archive;
+use App\Api\Utils\ArchiveTratament\ArchiveContracts\IArchive;
 use Illuminate\Support\Facades\Storage;
 
-class SaveArchiveLocal extends Archive
+class SaveArchiveLocal implements IArchive
 {
     public function save($file)
     {
