@@ -4,6 +4,6 @@ namespace App\Api\Application\Controllers;
 
 use App\Http\Controllers\Controller;
 
-class Car extends Controller{
+class CarController extends Controller{
     
 }
