@@ -10,7 +10,6 @@ class BrandRepository implements IBrandRepository
 {
     public function saveBrand(array $request)
     {
-        dd($request);
         Brand::create($request);
     }
 }

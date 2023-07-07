@@ -10,13 +10,13 @@ use Illuminate\Http\JsonResponse;
 
 class BrandRequest extends FormRequest
 {
-    public $name;
+    public string $name;
     public $image;
 
     public function rules()
     {
         return [
-            'name' => 'required|string|exists:marcas,nome',
+            'name' => 'required|string|unique:marcas,nome',
             'image' => 'required|file|mimes:jpg,jpeg'
         ];
     }
@@ -26,7 +26,7 @@ class BrandRequest extends FormRequest
         return [
             'required' => 'O campo :attribute é obrigatorio',
             'string' => 'O campo :attribute deve ser uma string.',
-            'exists' => 'O campo :attribute já existe',
+            'unique' => 'O campo :attribute já existe',
             'mimes' => 'A imagem precisa estar em formato jpg ou jpeg.'
         ];
     }

@@ -12,10 +12,11 @@ class SaveArchiveLocal implements IArchive
         return $this->saveLocalStorage($file);
     }
 
-    public function saveLocalStorage($file){
-       $fileName = Storage::disk('public')->put('imagens/marcas', file_get_contents($file), 'public');
-       $filePath = Storage::disk('public')->url($fileName);
+    public function saveLocalStorage($file)
+    {
+        $fileName = Storage::disk('public')->put('imagens/marcas', $file, 'public');
+        $filePath = Storage::disk('public')->url($fileName);
 
-       return $filePath;
+        return $filePath;
     }
 }

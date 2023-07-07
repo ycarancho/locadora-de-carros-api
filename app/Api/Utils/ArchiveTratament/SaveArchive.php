@@ -8,6 +8,6 @@ class SaveArchive
 {
     public function saveFile(IArchive $archive, $file)
     {
-        $archive->save($file);
+       return $archive->save($file);
     }
 }

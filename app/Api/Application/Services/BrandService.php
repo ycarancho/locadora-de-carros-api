@@ -21,22 +21,21 @@ class BrandService implements IBrandService
         $this->saveArchive = $SaveArchive;
         $this->saveArchiveLocal = $SaveArchiveLocal;
     }
-    
+
     public function saveBrand(BrandRequest $response): void
     {
-        if (is_numeric($response->name) || preg_match('/[^\w\s]/', $response->name)) {
+        if (is_numeric($response->input('name')) || preg_match('/[^\w\s]/', $response->input('name'))) {
             throw new Exception("O parametro passado não é uma string");
         }
-        if (!is_file($response->image)) {
+        if (!is_file($response->file('image'))) {
             throw new Exception("O parametro passado não é um arquivo");
         }
-        $filePath = $this->saveArchive->saveFile($this->saveArchiveLocal, $response->image);
+        $filePath = $this->saveArchive->saveFile($this->saveArchiveLocal, $response->file('image'));
 
         $brandArray = [
-            "nome" => $response->name,
+            "nome" => $response->input('name'),
             "imagem" => $filePath
         ];
-        dd($brandArray);
         $this->brandRepository->saveBrand($brandArray);
     }
 }

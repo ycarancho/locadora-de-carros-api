@@ -19,7 +19,6 @@ class BrandController extends Controller
     public function saveBrand(BrandRequest $request)
     {
         try{
-            dd($request);
             $this->brandService->saveBrand($request);
             return response()->json(['message'=>'Marca salva com sucesso']);
         }catch(\Throwable $th){
