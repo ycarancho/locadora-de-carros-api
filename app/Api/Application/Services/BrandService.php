@@ -3,7 +3,7 @@
 namespace App\Api\Application\Services;
 
 use App\Api\Application\Interfaces\IBrandService;
-use App\Api\Application\Requests\BrandRequest;
+use App\Api\Application\Requests\BrandRequest\SaveBrandRequest;
 use App\Api\Domain\BrandAggregate\BrandContracts\IBrandRepository;
 use App\Api\Utils\ArchiveTratament\SaveArchive;
 use App\Api\Utils\ArchiveTratament\SaveArchiveLocal;
@@ -22,7 +22,7 @@ class BrandService implements IBrandService
         $this->saveArchiveLocal = $SaveArchiveLocal;
     }
 
-    public function saveBrand(BrandRequest $response): void
+    public function saveBrand(SaveBrandRequest $response): void
     {
         if (is_numeric($response->input('name')) || preg_match('/[^\w\s]/', $response->input('name'))) {
             throw new Exception("O parametro passado não é uma string");
@@ -37,5 +37,26 @@ class BrandService implements IBrandService
             "imagem" => $filePath
         ];
         $this->brandRepository->saveBrand($brandArray);
+    }
+
+    public function findAllBrands(): array
+    {
+        $request = $this->brandRepository->findAllBrands();
+        $brandArray = [
+            "brands" => $request
+        ];
+
+        return $brandArray;
+    }
+
+    public function findBrand(int $brandId): array
+    {
+        $request = $this->brandRepository->findBrand($brandId);
+
+        $brandArray = [
+            "brand" => $request->getAttributes()
+        ];
+
+        return $brandArray;
     }
 }

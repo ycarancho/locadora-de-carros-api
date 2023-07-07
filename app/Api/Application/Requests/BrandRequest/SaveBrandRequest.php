@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\Application\Requests;
+namespace App\Api\Application\Requests\BrandRequest;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\contracts\Validation\Validator;
@@ -8,7 +8,7 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 
 
-class BrandRequest extends FormRequest
+class SaveBrandRequest extends FormRequest
 {
     public string $name;
     public $image;
@@ -17,7 +17,7 @@ class BrandRequest extends FormRequest
     {
         return [
             'name' => 'required|string|unique:marcas,nome',
-            'image' => 'required|file|mimes:jpg,jpeg'
+            'image' => 'required|file|mimes:jpg,jpeg,png'
         ];
     }
 
