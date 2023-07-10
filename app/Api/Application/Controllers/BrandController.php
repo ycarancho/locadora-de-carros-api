@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Api\Application\Interfaces\IBrandService;
 use App\Api\Application\Requests\BrandRequest\FindBrandRequest;
 use App\Api\Application\Requests\BrandRequest\SaveBrandRequest;
+use App\Api\Application\Requests\BrandRequest\UpdateBrandRequest;
 
 class BrandController extends Controller
 {
@@ -42,6 +43,16 @@ class BrandController extends Controller
         try {
             $response = $this->brandService->findBrand($request->input('brand_id'));
             return response()->json($response);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
+
+    public function updateBrand(UpdateBrandRequest $request)
+    {
+        try {
+            $this->brandService->updateBrand($request);
+            return response()->json(['message' => 'Marca atualizada com sucesso']);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }

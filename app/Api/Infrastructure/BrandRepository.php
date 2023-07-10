@@ -42,4 +42,10 @@ class BrandRepository implements IBrandRepository
 
         return $brand;
     }
+
+    public function updateBrand(array $request)
+    {
+
+        $this->brand->where('id', $request['id'])->update(['nome'=> $request['nome'], 'imagem'=> $request['imagem']]);
+    }
 }

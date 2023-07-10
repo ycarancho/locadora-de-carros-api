@@ -11,4 +11,6 @@ interface IBrandRepository
     public function saveBrand(array $request);
     public function findAllBrands(): Collection;
     public function findBrand(int $brandId): Brand;
+    public function updateBrand(array $request);
+
 }

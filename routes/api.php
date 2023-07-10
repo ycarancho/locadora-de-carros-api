@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('brand')->group(function (){
     Route::post('/save-brand', [BrandController::class, 'saveBrand']);
     Route::post('/find-brand', [BrandController::class, 'findBrand']);
+    Route::post('/update-brand', [BrandController::class, 'updateBrand']);
+    
     Route::get('/find-all-brands', [BrandController::class, 'findAllBrands']);
 });
 Route::prefix('car')->group(function (){
