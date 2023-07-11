@@ -77,7 +77,11 @@ class BrandService implements IBrandService
                 "nome" => $response->input('name'),
                 "imagem" => $filePath
             ];
+            
             $this->brandRepository->updateBrand($brandArray);
+            return;
         }
+
+        throw new Exception("Imagem não existe");
     }
 }
