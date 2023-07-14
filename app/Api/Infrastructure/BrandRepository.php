@@ -17,7 +17,7 @@ class BrandRepository implements IBrandRepository
     }
 
 
-    public function saveBrand(array $request)
+    public function saveBrand(array $request): void
     {
         $this->brand->create($request);
     }
@@ -43,9 +43,13 @@ class BrandRepository implements IBrandRepository
         return $brand;
     }
 
-    public function updateBrand(array $request)
+    public function updateBrand(array $request): void
     {
+        $this->brand->where('id', $request['id'])->update(['nome' => $request['nome'], 'imagem' => $request['imagem']]);
+    }
 
-        $this->brand->where('id', $request['id'])->update(['nome'=> $request['nome'], 'imagem'=> $request['imagem']]);
+    public function deletebrand(int $brandId): void
+    {
+        $this->brand->where('id', $brandId)->delete();
     }
 }

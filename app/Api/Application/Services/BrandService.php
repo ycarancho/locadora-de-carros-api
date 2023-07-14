@@ -3,6 +3,7 @@
 namespace App\Api\Application\Services;
 
 use App\Api\Application\Interfaces\IBrandService;
+use App\Api\Application\Requests\BrandRequest\FindBrandRequest;
 use App\Api\Application\Requests\BrandRequest\SaveBrandRequest;
 use App\Api\Application\Requests\BrandRequest\UpdateBrandRequest;
 use App\Api\Domain\BrandAggregate\BrandContracts\IBrandRepository;
@@ -47,9 +48,9 @@ class BrandService implements IBrandService
         return $brandArray;
     }
 
-    public function findBrand(int $brandId): array
+    public function findBrand(FindBrandRequest $response): array
     {
-        $request = $this->brandRepository->findBrand($brandId);
+        $request = $this->brandRepository->findBrand($response->input('brand_id'));
 
         $brandArray = [
             "brand" => $request->getAttributes()
@@ -77,9 +78,21 @@ class BrandService implements IBrandService
                 "nome" => $response->input('name'),
                 "imagem" => $filePath
             ];
-            
+
             $this->brandRepository->updateBrand($brandArray);
             return;
+        }
+
+        throw new Exception("Imagem não existe");
+    }
+
+    public function deleteBrand(FindBrandRequest $response): void
+    {
+        $brand = $this->brandRepository->findBrand($response->input('brand_id'));
+        $brand = $brand->getAttributes();
+
+        if($this->archiveTratament->deleteFile($this->archiveLocal, $brand['imagem'])){
+            $this->brandRepository->deleteBrand($brand['id']);
         }
 
         throw new Exception("Imagem não existe");

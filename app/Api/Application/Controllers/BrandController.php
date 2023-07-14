@@ -57,4 +57,14 @@ class BrandController extends Controller
             return response()->json(['error' => $th->getMessage()], 500);
         }
     }
+
+    public function deleteBrand(FindBrandRequest $request)
+    {
+        try {
+            $this->brandService->deleteBrand($request->input('brand_id'));
+            return response()->json(['message'=>'Marca removida com sucesso']);
+        } catch (\Throwable $th) {
+            return response()->json(['error' => $th->getMessage()], 500);
+        }
+    }
 }

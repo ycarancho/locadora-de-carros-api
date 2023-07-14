@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Collection;
 
 interface IBrandRepository
 {
-    public function saveBrand(array $request);
+    public function saveBrand(array $request): void;
     public function findAllBrands(): Collection;
     public function findBrand(int $brandId): Brand;
-    public function updateBrand(array $request);
+    public function updateBrand(array $request): void;
+    public function deletebrand(int $brandId): void;
 
 }
