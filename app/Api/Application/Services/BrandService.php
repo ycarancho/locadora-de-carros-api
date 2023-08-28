@@ -65,25 +65,24 @@ class BrandService implements IBrandService
             throw new Exception("O parametro passado não é uma string");
         }
 
+        $brandArray = [
+            "id" => $response->input('brand_id'),
+            "nome" => $response->input('name'),
+        ];
+
         //recupera objeto refente ao id passado.
         $brand = $this->brandRepository->findBrand($response->input('brand_id'));
         $brand = $brand->getAttributes();
 
         //remover arquivo
-
-        if ($this->archiveTratament->deleteFile($this->archiveLocal, $brand['imagem'])) {
+        if (is_file($response->file('image'))) {
+            $this->archiveTratament->deleteFile($this->archiveLocal, $brand['imagem']);
             $filePath = $this->archiveTratament->saveFile($this->archiveLocal, $response->file('image'));
-            $brandArray = [
-                "id" => $response->input('brand_id'),
-                "nome" => $response->input('name'),
-                "imagem" => $filePath
-            ];
-
-            $this->brandRepository->updateBrand($brandArray);
-            return;
+            $brandArray["imagem"] = $filePath;
         }
 
-        throw new Exception("Imagem não existe");
+        $this->brandRepository->updateBrand($brandArray);
+        return;
     }
 
     public function deleteBrand(FindBrandRequest $response): void
@@ -91,10 +90,10 @@ class BrandService implements IBrandService
         $brand = $this->brandRepository->findBrand($response->input('brand_id'));
         $brand = $brand->getAttributes();
 
-        if($this->archiveTratament->deleteFile($this->archiveLocal, $brand['imagem'])){
-            $this->brandRepository->deleteBrand($brand['id']);
-        }
 
-        throw new Exception("Imagem não existe");
+        if (!empty($brand['imagem'])) {
+            $this->archiveTratament->deleteFile($this->archiveLocal, $brand['imagem']);
+        }
+        $this->brandRepository->deleteBrand($brand['id']);
     }
 }

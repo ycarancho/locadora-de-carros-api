@@ -45,7 +45,7 @@ class BrandRepository implements IBrandRepository
 
     public function updateBrand(array $request): void
     {
-        $this->brand->where('id', $request['id'])->update(['nome' => $request['nome'], 'imagem' => $request['imagem']]);
+        $this->brand->where('id', $request['id'])->update($request);
     }
 
     public function deletebrand(int $brandId): void

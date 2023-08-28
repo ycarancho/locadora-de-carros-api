@@ -41,7 +41,7 @@ class BrandController extends Controller
     public function findBrand(FindBrandRequest $request)
     {
         try {
-            $response = $this->brandService->findBrand($request->input('brand_id'));
+            $response = $this->brandService->findBrand($request);
             return response()->json($response);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
@@ -61,7 +61,7 @@ class BrandController extends Controller
     public function deleteBrand(FindBrandRequest $request)
     {
         try {
-            $this->brandService->deleteBrand($request->input('brand_id'));
+            $this->brandService->deleteBrand($request);
             return response()->json(['message'=>'Marca removida com sucesso']);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
