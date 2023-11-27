@@ -17,7 +17,7 @@ class SaveBrandRequest extends FormRequest
     {
         return [
             'name' => 'required|string|unique:marcas,nome',
-            'image' => 'required|file|mimes:jpg,jpeg,png'
+            'image' => 'required|file|mimes:jpeg,jpg,png'
         ];
     }
 
@@ -27,7 +27,6 @@ class SaveBrandRequest extends FormRequest
             'required' => 'O campo :attribute é obrigatorio',
             'string' => 'O campo :attribute deve ser uma string.',
             'unique' => 'O campo :attribute já existe',
-            'mimes' => 'A imagem precisa estar em formato jpg ou jpeg.'
         ];
     }
 

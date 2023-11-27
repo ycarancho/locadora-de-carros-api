@@ -62,7 +62,7 @@ class BrandController extends Controller
     {
         try {
             $this->brandService->deleteBrand($request);
-            return response()->json(['message'=>'Marca removida com sucesso']);
+            return response()->json(['message' => 'Marca removida com sucesso']);
         } catch (\Throwable $th) {
             return response()->json(['error' => $th->getMessage()], 500);
         }

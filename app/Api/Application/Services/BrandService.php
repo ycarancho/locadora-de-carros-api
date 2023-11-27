@@ -9,6 +9,7 @@ use App\Api\Application\Requests\BrandRequest\UpdateBrandRequest;
 use App\Api\Domain\BrandAggregate\BrandContracts\IBrandRepository;
 use App\Api\Utils\ArchiveTratament\ArchiveTratament;
 use App\Api\Utils\ArchiveTratament\ArchiveLocal;
+use App\Api\Utils\Guard\Guard;
 use Exception;
 
 class BrandService implements IBrandService
@@ -16,23 +17,23 @@ class BrandService implements IBrandService
     private IBrandRepository $brandRepository;
     private ArchiveTratament $archiveTratament;
     private ArchiveLocal $archiveLocal;
+    private Guard $guard;
 
-    public function __construct(IBrandRepository $IBrandRepository, ArchiveTratament $ArchiveTratament, ArchiveLocal $ArchiveLocal)
+    public function __construct(IBrandRepository $IBrandRepository, ArchiveTratament $ArchiveTratament, ArchiveLocal $ArchiveLocal, Guard $Guard)
     {
         $this->brandRepository = $IBrandRepository;
         $this->archiveTratament = $ArchiveTratament;
         $this->archiveLocal = $ArchiveLocal;
+        $this->guard = $Guard;
     }
 
-    public function saveBrand(SaveBrandRequest $response): void
+    public function saveBrand(SaveBrandRequest $request): void
     {
-        if (is_numeric($response->input('name')) || preg_match('/[^\w\s]/', $response->input('name'))) {
-            throw new Exception("O parametro passado não é uma string");
-        }
-        $filePath = $this->archiveTratament->saveFile($this->archiveLocal, $response->file('image'));
+        $this->guard->check(is_numeric($request->input('name')) || preg_match('/[^\w\s]/', $request->input('name')), "O parametro passado não é uma string");
+        $filePath = $this->archiveTratament->saveFile($this->archiveLocal, $request->file('image'));
 
         $brandArray = [
-            "nome" => $response->input('name'),
+            "nome" => $request->input('name'),
             "imagem" => $filePath
         ];
         $this->brandRepository->saveBrand($brandArray);
