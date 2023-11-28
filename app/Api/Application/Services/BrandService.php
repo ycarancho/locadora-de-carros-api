@@ -10,7 +10,6 @@ use App\Api\Domain\BrandAggregate\BrandContracts\IBrandRepository;
 use App\Api\Utils\ArchiveTratament\ArchiveTratament;
 use App\Api\Utils\ArchiveTratament\ArchiveLocal;
 use App\Api\Utils\Guard\Guard;
-use Exception;
 
 class BrandService implements IBrandService
 {
@@ -29,13 +28,15 @@ class BrandService implements IBrandService
 
     public function saveBrand(SaveBrandRequest $request): void
     {
-        $this->guard->check(is_numeric($request->input('name')) || preg_match('/[^\w\s]/', $request->input('name')), "O parametro passado não é uma string");
-        $filePath = $this->archiveTratament->saveFile($this->archiveLocal, $request->file('image'));
+        $this->guard->check(is_numeric($request->input('name')), "O parametro passado não é uma string");
+        $this->guard->check(preg_match('/[^\w\s]/', $request->input('name')), "Existem caracteres proibidos no nome");
 
+        $filePath = $this->archiveTratament->saveFile($this->archiveLocal, $request->file('image'));
         $brandArray = [
             "nome" => $request->input('name'),
             "imagem" => $filePath
         ];
+
         $this->brandRepository->saveBrand($brandArray);
     }
 
@@ -60,41 +61,34 @@ class BrandService implements IBrandService
         return $brandArray;
     }
 
-    public function updateBrand(UpdateBrandRequest $response): void
+    public function updateBrand(UpdateBrandRequest $request): void
     {
-        if (is_numeric($response->input('name')) || preg_match('/[^\w\s]/', $response->input('name'))) {
-            throw new Exception("O parametro passado não é uma string");
-        }
+        $this->guard->check(is_numeric($request->input('name')), "O parametro passado não é uma string");
+        $this->guard->check(preg_match('/[^\w\s]/', $request->input('name')), "Existem caracteres proibidos no nome");
 
         $brandArray = [
-            "id" => $response->input('brand_id'),
-            "nome" => $response->input('name'),
+            "id" => $request->input('brand_id'),
+            "nome" => $request->input('name'),
         ];
 
         //recupera objeto refente ao id passado.
-        $brand = $this->brandRepository->findBrand($response->input('brand_id'));
-        $brand = $brand->getAttributes();
+        $brand = $this->brandRepository->findBrand($request->input('brand_id'));
 
         //remover arquivo
-        if (is_file($response->file('image'))) {
-            $this->archiveTratament->deleteFile($this->archiveLocal, $brand['imagem']);
-            $filePath = $this->archiveTratament->saveFile($this->archiveLocal, $response->file('image'));
+        if (!empty($request->file('image'))) {
+            $this->archiveTratament->deleteFile($this->archiveLocal, $brand->imagem);
+            $filePath = $this->archiveTratament->saveFile($this->archiveLocal, $request->file('image'));
             $brandArray["imagem"] = $filePath;
         }
 
         $this->brandRepository->updateBrand($brandArray);
-        return;
     }
 
     public function deleteBrand(FindBrandRequest $response): void
     {
         $brand = $this->brandRepository->findBrand($response->input('brand_id'));
-        $brand = $brand->getAttributes();
 
-
-        if (!empty($brand['imagem'])) {
-            $this->archiveTratament->deleteFile($this->archiveLocal, $brand['imagem']);
-        }
+        $this->archiveTratament->deleteFile($this->archiveLocal, $brand->imagem);
         $this->brandRepository->deleteBrand($brand['id']);
     }
 }
