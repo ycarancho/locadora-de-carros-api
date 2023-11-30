@@ -4,6 +4,7 @@ use App\Api\Application\Controllers\BrandController;
 use App\Api\Application\Controllers\CarController;
 use App\Api\Application\Controllers\ClientController;
 use App\Api\Application\Controllers\LeaseController;
+use App\Api\Application\Controllers\ModelController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,7 +45,12 @@ Route::prefix('lease')->group(function (){
 });
 
 Route::prefix('model')->group(function (){
-    Route::post('/save-model', [BrandController::class, 'saveModel']);
+    Route::post('/save-model', [ModelController::class, 'saveModel']);
+    Route::post('/find-model', [ModelController::class, 'findModel']);
+    Route::post('/update-model', [ModelController::class, 'updateModel']);
+    Route::post('/delete-model', [ModelController::class, 'deleteModel']);
+    
+    Route::get('/find-all-models', [ModelController::class, 'findAllModels']);
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

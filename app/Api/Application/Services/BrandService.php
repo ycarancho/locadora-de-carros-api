@@ -7,6 +7,7 @@ use App\Api\Application\Requests\BrandRequest\FindBrandRequest;
 use App\Api\Application\Requests\BrandRequest\SaveBrandRequest;
 use App\Api\Application\Requests\BrandRequest\UpdateBrandRequest;
 use App\Api\Domain\BrandAggregate\BrandContracts\IBrandRepository;
+use App\Api\Utils\ArchiveTratament\ArchiveContracts\ArchivePath;
 use App\Api\Utils\ArchiveTratament\ArchiveTratament;
 use App\Api\Utils\ArchiveTratament\ArchiveLocal;
 use App\Api\Utils\Guard\Guard;
@@ -15,14 +16,12 @@ class BrandService implements IBrandService
 {
     private IBrandRepository $brandRepository;
     private ArchiveTratament $archiveTratament;
-    private ArchiveLocal $archiveLocal;
     private Guard $guard;
 
     public function __construct(IBrandRepository $IBrandRepository, ArchiveTratament $ArchiveTratament, ArchiveLocal $ArchiveLocal, Guard $Guard)
     {
         $this->brandRepository = $IBrandRepository;
         $this->archiveTratament = $ArchiveTratament;
-        $this->archiveLocal = $ArchiveLocal;
         $this->guard = $Guard;
     }
 
@@ -31,7 +30,7 @@ class BrandService implements IBrandService
         $this->guard->check(is_numeric($request->input('name')), "O parametro passado não é uma string");
         $this->guard->check(preg_match('/[^\w\s]/', $request->input('name')), "Existem caracteres proibidos no nome");
 
-        $filePath = $this->archiveTratament->saveFile($this->archiveLocal, $request->file('image'));
+        $filePath = $this->archiveTratament->saveFile(new ArchiveLocal(), $request->file('image'), ArchivePath::brands);
         $brandArray = [
             "nome" => $request->input('name'),
             "imagem" => $filePath
@@ -76,8 +75,8 @@ class BrandService implements IBrandService
 
         //remover arquivo
         if (!empty($request->file('image'))) {
-            $this->archiveTratament->deleteFile($this->archiveLocal, $brand->imagem);
-            $filePath = $this->archiveTratament->saveFile($this->archiveLocal, $request->file('image'));
+            $this->archiveTratament->deleteFile(new ArchiveLocal(), $brand->imagem);
+            $filePath = $this->archiveTratament->saveFile(new ArchiveLocal(), $request->file('image'), ArchivePath::brands);
             $brandArray["imagem"] = $filePath;
         }
 
@@ -88,7 +87,7 @@ class BrandService implements IBrandService
     {
         $brand = $this->brandRepository->findBrand($response->input('brand_id'));
 
-        $this->archiveTratament->deleteFile($this->archiveLocal, $brand->imagem);
+        $this->archiveTratament->deleteFile(new ArchiveLocal(), $brand->imagem);
         $this->brandRepository->deleteBrand($brand['id']);
     }
 }

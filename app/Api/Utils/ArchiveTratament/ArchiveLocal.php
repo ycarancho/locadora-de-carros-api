@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Storage;
 
 class ArchiveLocal implements IArchive
 {
-    public function save($file)
+    public function save($file, $path)
     {
-        return $this->saveLocalStorage($file);
+        return $this->saveLocalStorage($file, $path);
     }
 
     public function delete($file)
@@ -17,9 +17,9 @@ class ArchiveLocal implements IArchive
         return $this->deleteLocalStorage($file);
     }
 
-    public function saveLocalStorage($file)
+    public function saveLocalStorage($file, $path)
     {
-        $fileName = Storage::disk('public')->put('imagens/marcas', $file, 'public');
+        $fileName = Storage::disk('public')->put($path, $file, 'public');
         $filePath = Storage::disk('public')->url($fileName);
 
         return $filePath;

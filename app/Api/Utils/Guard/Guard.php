@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Api\Utils\Guard;
+namespace App\Api\Utils\Guard;
 
 use Exception;
 
