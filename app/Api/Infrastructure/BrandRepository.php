@@ -2,10 +2,10 @@
 
 namespace App\Api\Infrastructure;
 
-use App\Api\Application\Requests\BrandRequest;
 use App\Api\Domain\BrandAggregate\BrandContracts\IBrandRepository;
 use App\Api\Domain\BrandAggregate\Brand;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class BrandRepository implements IBrandRepository
 {
@@ -17,39 +17,41 @@ class BrandRepository implements IBrandRepository
     }
 
 
-    public function saveBrand(array $request): void
+    public function saveBrand(Brand $brand): void
     {
-        $this->brand->create($request);
+        DB::transaction(function () use ($brand) {
+            $brand->save();
+        });
     }
 
     public function findAllBrands(): Collection
     {
-        $brands = $this->brand->all();
-
-        if (!$brands) {
-            return new Brand();
-        }
-
-        return $brands;
+        return $this->brand->all()->whereNull('deleted_at')->map(function ($item) {
+            return [
+                'nome' => $item->nome,
+                'imagem' => $item->imagem,
+                'id' => $item->id
+            ];
+        });
     }
 
     public function findBrand(int $brandId): Brand
     {
-        $brand = $this->brand->where('id', $brandId)->first();
-        if (!$brand) {
-            return new Brand();
-        }
-
-        return $brand;
+        return $this->brand->where('id', $brandId)->first();
     }
 
-    public function updateBrand(array $request): void
+    public function updateBrand(Brand $brand): void
     {
-        $this->brand->where('id', $request['id'])->update($request);
+        DB::transaction(function () use ($brand) {
+            $brand->update();
+        });
     }
 
-    public function deletebrand(int $brandId): void
+    public function deletebrand(Brand $brand): void
     {
-        $this->brand->where('id', $brandId)->delete();
+        DB::transaction(function () use ($brand) {
+            $brand->update();
+            $brand->delete();
+        });
     }
 }

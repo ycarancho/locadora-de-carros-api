@@ -2,16 +2,17 @@
 
 namespace App\Api\Domain\BrandAggregate\BrandContracts;
 
-use App\Api\Application\Requests\BrandRequest;
+
 use App\Api\Domain\BrandAggregate\Brand;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
+
 
 interface IBrandRepository
 {
-    public function saveBrand(array $request): void;
+    public function saveBrand(Brand $brand): void;
     public function findAllBrands(): Collection;
     public function findBrand(int $brandId): Brand;
-    public function updateBrand(array $request): void;
-    public function deletebrand(int $brandId): void;
+    public function updateBrand(Brand $request): void;
+    public function deletebrand(Brand $brandId): void;
 
 }

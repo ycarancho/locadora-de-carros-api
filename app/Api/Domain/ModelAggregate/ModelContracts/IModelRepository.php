@@ -3,11 +3,12 @@
 namespace App\Api\Domain\ModelAggregate\ModelContracts;
 
 use App\Api\Domain\ModelAggregate\Model;
+use Illuminate\Support\Collection;
 
 interface IModelRepository {
     public function saveModel(Model $model): void;
-    public function findModel();
+    public function findModel(int $modelID): Model;
     public function updateModel();
     public function deleteModel();
-    public function findAllModels();
+    public function findAllModels(): Collection;
 }

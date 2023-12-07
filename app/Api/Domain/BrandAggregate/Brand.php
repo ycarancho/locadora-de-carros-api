@@ -21,11 +21,11 @@ class Brand extends Model
 
         if ($numberOfArguments > 0) {
             $arguments = func_get_args();
-            call_user_func(array($this, 'builder'), $arguments);
+            call_user_func_array([$this, 'builder'], $arguments);
         }
     }
 
-    public function builder(String $name, String $image)
+    public function builder(string $name, string $image)
     {
         $this->nome = $name;
         $this->imagem = $image;

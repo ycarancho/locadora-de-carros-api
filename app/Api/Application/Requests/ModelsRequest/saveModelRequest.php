@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 
-class saveModelRequest extends FormRequest
+class SaveModelRequest extends FormRequest
 {
     public int $brand_id;
     public string $name;
