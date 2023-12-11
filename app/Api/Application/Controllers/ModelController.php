@@ -5,6 +5,7 @@ namespace App\Api\Application\Controllers;
 use App\Api\Application\Interfaces\IModelService;
 use App\Api\Application\Requests\ModelsRequest\FindModelRequest;
 use App\Api\Application\Requests\ModelsRequest\SaveModelRequest;
+use App\Api\Application\Requests\ModelsRequest\UpdateModelRequest;
 use App\Http\Controllers\Controller;
 use Throwable;
 
@@ -26,7 +27,7 @@ class ModelController extends Controller
     {
         try {
             $this->modelService->saveModel($request);
-            return response()->json("Modelo salvo com sucesso !");
+            return response()->json(["Message" => "Modelo salvo com sucesso !"]);
         } catch (Throwable $th) {
             return response()->json(["error" => $th->getMessage()]);
         }
@@ -45,24 +46,43 @@ class ModelController extends Controller
             return response()->json(["error" => $th->getMessage()]);
         }
     }
-
-    public function updateModel()
+    /**
+     * @param UpdateModelRequest
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateModel(UpdateModelRequest $request)
     {
+        try {
+            $this->modelService->updateModel($request);
+            return response()->json(["Message" => "Modelo atualizado"]);
+        } catch (Throwable $th) {
+            return response()->json(["error"=> $th->getMessage()]);
+        }
     }
-    public function deleteModel()
+    /**
+     * @param FindModelRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function deleteModel(FindModelRequest $request)
     {
+        try {
+            $this->modelService->deleteModel($request);
+            return response()->json(["message" => "Registro removido"]);
+        } catch (Throwable $th) {
+            return response()->json(["error"=> $th->getMessage()]);
+        }
     }
 
-        /**
+    /**
      * @param void
      * @return \Illuminate\Http\JsonResponse
      */
     public function findAllModels()
     {
-        try{
+        try {
             $models = $this->modelService->findAllModels();
             return response()->json($models);
-        }catch(Throwable $th){
+        } catch (Throwable $th) {
             return response()->json(['error' => $th->getMessage()]);
         }
     }

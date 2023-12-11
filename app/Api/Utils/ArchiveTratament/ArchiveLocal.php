@@ -27,9 +27,13 @@ class ArchiveLocal implements IArchive
 
     public function deleteLocalStorage($file)
     {
-        $urn = str_replace('http://localhost:8000/storage', '', $file);
-        if (Storage::disk('public')->exists($urn)) {
-            return Storage::disk('public')->delete($urn);
+        if ($file != "removivido") {
+            $urn = str_replace('http://localhost:8000/storage', '', $file);
+            if (Storage::disk('public')->exists($urn)) {
+                return Storage::disk('public')->delete($urn);
+            }
         }
+
+        return;
     }
 }

@@ -29,12 +29,12 @@ class BrandService implements IBrandService
 
     public function saveBrand(SaveBrandRequest $request): void
     {
-        $this->guard->check(is_numeric($request->input('name')), "O parametro passado não é uma string");
-        $this->guard->check(preg_match('/[^\w\s]/', $request->input('name')), "Existem caracteres proibidos no nome");
+        $this->guard->check(is_numeric($request->input('nome')), "O parametro passado não é uma string");
+        $this->guard->check(preg_match('/[^\w\s]/', $request->input('nome')), "Existem caracteres proibidos no nome");
 
-        $filePath = $this->archiveTratament->saveFile(new ArchiveLocal(), $request->file('image'), ArchivePath::brands);
+        $filePath = $this->archiveTratament->saveFile(new ArchiveLocal(), $request->file('imagem'), ArchivePath::brands);
         $brand = new Brand(
-            $request->input('name'),
+            $request->input('nome'),
             $filePath
         );
         $this->brandRepository->saveBrand($brand);
@@ -47,21 +47,20 @@ class BrandService implements IBrandService
 
     public function findBrand(FindBrandRequest $response): Brand
     {
-       return $this->brandRepository->findBrand($response->input('brand_id')); 
+       return $this->brandRepository->findBrand($response->input('id')); 
     }
 
     public function updateBrand(UpdateBrandRequest $request): void
     {
-        $this->guard->check(is_numeric($request->input('name')), "O parametro passado não é uma string");
+        $this->guard->check(is_numeric($request->input('nome')), "O parametro passado não é uma string");
         $this->guard->check(preg_match('/[^\w\s]/', $request->input('name')), "Existem caracteres proibidos no nome");
 
-        //recupera objeto refente ao id passado.
-        $brand = $this->brandRepository->findBrand($request->input('brand_id'));
-        $brand->nome = $request->input('name');
-        //remover arquivo
-        if (!empty($request->file('image'))) {
+        $brand = $this->brandRepository->findBrand($request->input('id'));
+        $brand->nome = $request->input('nome');
+
+        if (!empty($request->file('imagem'))) {
             $this->archiveTratament->deleteFile(new ArchiveLocal(), $brand->imagem);
-            $filePath = $this->archiveTratament->saveFile(new ArchiveLocal(), $request->file('image'), ArchivePath::brands);
+            $filePath = $this->archiveTratament->saveFile(new ArchiveLocal(), $request->file('imagem'), ArchivePath::brands);
             $brand->imagem = $filePath;
         }
         $this->brandRepository->updateBrand($brand);
@@ -69,7 +68,7 @@ class BrandService implements IBrandService
 
     public function deleteBrand(FindBrandRequest $response): void
     {
-        $brand = $this->brandRepository->findBrand($response->input('brand_id'));
+        $brand = $this->brandRepository->findBrand($response->input('id'));
 
         $this->archiveTratament->deleteFile(new ArchiveLocal(), $brand->imagem);
         $brand->imagem = "removido";

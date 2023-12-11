@@ -22,9 +22,9 @@ class BrandController extends Controller
     {
         try {
             $this->brandService->saveBrand($request);
-            return response()->json(['message' => 'Marca salva com sucesso']);
+            return response()->json(["message" => "Marca salva com sucesso"]);
         } catch (\Throwable $th) {
-            return response()->json(['error' => $th->getMessage()], 500);
+            return response()->json(["error" => $th->getMessage()], 500);
         }
     }
 
@@ -34,7 +34,7 @@ class BrandController extends Controller
             $response = $this->brandService->findAllBrands();
             return response()->json($response);
         } catch (\Throwable $th) {
-            return response()->json(['error' => $th->getMessage()], 500);
+            return response()->json(["error" => $th->getMessage()], 500);
         }
     }
 
@@ -44,7 +44,7 @@ class BrandController extends Controller
             $response = $this->brandService->findBrand($request);
             return response()->json($response);
         } catch (\Throwable $th) {
-            return response()->json(['error' => $th->getMessage()], 500);
+            return response()->json(["error" => $th->getMessage()], 500);
         }
     }
 
@@ -52,9 +52,9 @@ class BrandController extends Controller
     {
         try {
             $this->brandService->updateBrand($request);
-            return response()->json(['message' => 'Marca atualizada com sucesso']);
+            return response()->json(["message" => "Marca atualizada com sucesso"]);
         } catch (\Throwable $th) {
-            return response()->json(['error' => $th->getMessage()], 500);
+            return response()->json(["error" => $th->getMessage()], 500);
         }
     }
 
@@ -62,9 +62,9 @@ class BrandController extends Controller
     {
         try {
             $this->brandService->deleteBrand($request);
-            return response()->json(['message' => 'Marca removida com sucesso']);
+            return response()->json(["message" => "Marca removida com sucesso"]);
         } catch (\Throwable $th) {
-            return response()->json(['error' => $th->getMessage()], 500);
+            return response()->json(["error" => $th->getMessage()], 500);
         }
     }
 }

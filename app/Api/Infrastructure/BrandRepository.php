@@ -43,6 +43,11 @@ class BrandRepository implements IBrandRepository
     public function updateBrand(Brand $brand): void
     {
         DB::transaction(function () use ($brand) {
+            if(!empty($brand->deleted_at)){
+                $brand->restore();
+            }
+
+            $brand->updated_at = now('America/Sao_Paulo');
             $brand->update();
         });
     }

@@ -10,14 +10,14 @@ use Illuminate\Http\JsonResponse;
 
 class SaveBrandRequest extends FormRequest
 {
-    public string $name;
-    public $image;
+    public string $nome;
+    public $imagem;
 
     public function rules()
     {
         return [
-            'name' => 'required|string|unique:marcas,nome',
-            'image' => 'required|file|mimes:jpeg,jpg,png'
+            'nome' => 'required|string|unique:marcas,nome',
+            'imagem' => 'required|image|mimes:jpeg,jpg,png'
         ];
     }
 
@@ -42,8 +42,8 @@ class SaveBrandRequest extends FormRequest
 
     public function response(): self
     {
-        $this->name = $this->input('name');
-        $this->image = $this->file('image');
+        $this->nome = $this->input('nome');
+        $this->imagem = $this->file('imagem');
         
         return $this;
     }

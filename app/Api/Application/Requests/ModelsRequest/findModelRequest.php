@@ -8,12 +8,12 @@ use Illuminate\Http\JsonResponse;
 
 class FindModelRequest extends FormRequest
 {
-    public int $model_id;
+    public int $id;
 
     public function rules()
     {
         return [
-            'model_id' => 'required|int|exists:modelos,id'
+            'id' => 'required|int|exists:modelos,id'
         ];
     }
 
@@ -36,7 +36,7 @@ class FindModelRequest extends FormRequest
 
     public function request(): self
     {
-        $this->model_id = $this->input('model_id');
+        $this->id = $this->input('id');
         return $this;
     }
 }

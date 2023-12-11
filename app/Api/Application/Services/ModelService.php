@@ -5,6 +5,7 @@ namespace App\Api\Application\Services;
 use App\Api\Application\Interfaces\IModelService;
 use app\Api\Application\Requests\ModelsRequest\FindModelRequest;
 use App\Api\Application\Requests\ModelsRequest\saveModelRequest;
+use App\Api\Application\Requests\ModelsRequest\UpdateModelRequest;
 use App\Api\Domain\ModelAggregate\ModelContracts\IModelRepository;
 use App\Api\Utils\Guard\Guard;
 use App\Api\Domain\ModelAggregate\Model;
@@ -29,33 +30,61 @@ class ModelService implements IModelService
 
     public function saveModel(saveModelRequest $request): void
     {
-        $this->guard->check(is_numeric($request->input('name')), "O parametro passado não é uma string");
-        $this->guard->check(preg_match('/[^\w\s]/', $request->input('name')), "Existem caracteres proibidos no nome");
+        $this->guard->check(is_numeric($request->input('nome')), "O parametro passado não é uma string");
+        $this->guard->check(preg_match('/[^\w\s]/', $request->input('nome')), "Existem caracteres proibidos no nome");
 
-        $filePath = $this->archiveTratment->saveFile(new ArchiveLocal(), $request->file('image'), ArchivePath::models);
+        $filePath = $this->archiveTratment->saveFile(new ArchiveLocal(), $request->file('imagem'), ArchivePath::models);
 
         $model = new Model(
-            intval($request->input('brand_id')),
-            $request->input('name'),
+            intval($request->input('marca_id')),
+            $request->input('nome'),
             $filePath,
-            intval($request->input('doors_numbers')),
-            intval($request->input('places')),
+            intval($request->input('numero_portas')),
+            intval($request->input('lugares')),
             intval($request->input('air_bag')),
             intval($request->input('abs')),
         );
 
         $this->modelRepository->saveModel($model);
     }
+
     public function findModel(FindModelRequest $request): Model
     {
-        return $this->modelRepository->findModel($request->input('model_id'));
+        return $this->modelRepository->findModel($request->input('id'));
     }
-    public function updateModel()
+    
+    public function updateModel(UpdateModelRequest $request): void
     {
+        $this->guard->check(is_numeric($request->input('nome')), "O parametro passado não é uma string");
+        $this->guard->check(preg_match('/[^\w\s]/', $request->input('nome')), "Existem caracteres proibidos no nome");
+
+        $model = $this->modelRepository->findModel($request->input('id'));
+
+        if (!empty($request->file('imagem'))) {
+            $this->archiveTratment->deleteFile(new ArchiveLocal(), $model->imagem);
+            $filePath = $this->archiveTratment->saveFile(new ArchiveLocal(), $request->file('imagem'), ArchivePath::models);
+            $model->imagem = $filePath;
+        }
+        foreach ($model->getAttributes() as $key => $value) {
+            if ($key != 'imagem' && $key != 'created_at') {
+                $model->$key = $request->input($key);
+            };
+        }
+        $this->modelRepository->updateModel($model);
     }
-    public function deleteModel()
+
+    public function deleteModel(FindModelRequest $request): void
     {
+        $model = $this->modelRepository->findModel($request->input('id'));
+
+        if(!empty($model->imagem)){
+            $this->archiveTratment->deleteFile(new ArchiveLocal(), $model->imagem);
+            $model->imagem = "removido";
+        }
+        
+        $this->modelRepository->deleteModel($model);
     }
+
     public function findAllModels(): Collection
     {
         return $this->modelRepository->findAllModels();

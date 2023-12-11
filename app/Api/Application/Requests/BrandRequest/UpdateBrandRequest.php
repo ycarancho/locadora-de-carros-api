@@ -10,16 +10,16 @@ use Illuminate\Http\JsonResponse;
 
 class UpdateBrandRequest extends FormRequest
 {
-    public $brand_id;
-    public $name;
-    public $image;
+    public $id;
+    public $nome;
+    public $imagem;
 
     public function rules()
     {
         return [
-            'brand_id' => 'required|integer|exists:marcas,id',
-            'name' => 'string',
-            'image' => 'file|mimes:jpg,jpeg,png'
+            'id' => 'required|integer|exists:marcas,id',
+            'nome' => 'string',
+            'imagem' => 'image|mimes:jpg,jpeg,png'
         ];
     }
 
@@ -45,9 +45,9 @@ class UpdateBrandRequest extends FormRequest
 
     public function response(): self
     {
-        $this->brand_id =  $this->input('brand_id');
-        $this->name =  $this->input('name');
-        $this->image =  $this->file('image');
+        $this->id =  $this->input('id');
+        $this->nome =  $this->input('nome');
+        $this->imagem =  $this->file('imagem');
 
         return $this;
 
