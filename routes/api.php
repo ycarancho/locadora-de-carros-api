@@ -34,6 +34,11 @@ Route::prefix('brand')->group(function (){
 
 Route::prefix('car')->group(function (){
     Route::post('/save-car', [CarController::class, 'saveCar']);
+    Route::post('/find-car', [CarController::class, 'findCar']);
+    Route::post('/update-car', [CarController::class, 'updateCar']);
+    Route::post('/delete-car', [CarController::class, 'deleteCar']);
+
+    Route::post('/find-all-cars', [CarController::class, 'findAllCars']);
 });
 
 Route::prefix('client')->group(function (){
