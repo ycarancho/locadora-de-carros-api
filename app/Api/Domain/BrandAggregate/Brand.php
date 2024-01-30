@@ -25,7 +25,7 @@ class Brand extends Model
         }
     }
 
-    public function builder(string $name, string $image)
+    protected function builder(string $name, string $image)
     {
         $this->nome = $name;
         $this->imagem = $image;
