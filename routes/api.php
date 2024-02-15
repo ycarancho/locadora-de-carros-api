@@ -43,6 +43,11 @@ Route::prefix('car')->group(function (){
 
 Route::prefix('client')->group(function (){
     Route::post('/save-client', [ClientController::class, 'saveClient']);
+    Route::post('/find-client', [ClientController::class, 'findClient']);
+    Route::post('/update-client', [ClientController::class, 'updateClient']);
+    Route::post('/delete-client', [ClientController::class, 'delteClient']);
+    
+    Route::get('/find-all-client', [ClientController::class, 'findAllClient']);
 });
 
 Route::prefix('lease')->group(function (){
