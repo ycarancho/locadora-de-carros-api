@@ -5,6 +5,7 @@ namespace App\Api\Application\Controllers;
 use App\Api\Application\Interfaces\IClientService;
 use App\Api\Application\Requests\ClientRequest\FindClientRequest;
 use App\Api\Application\Requests\ClientRequest\SaveClientRequest;
+use App\Api\Application\Requests\ClientRequest\UpdateClientRequest;
 use App\Http\Controllers\Controller;
 
 class ClientController extends Controller
@@ -32,6 +33,16 @@ class ClientController extends Controller
         try {
             $client = $this->clientService->findClient($request);
             return response()->json($client);
+        } catch (\Throwable $th) {
+            return response()->json($th->getMessage());
+        }
+    }
+
+    public function updateClient(UpdateClientRequest $request)
+    {
+        try {
+            $this->clientService->updateClient($request);
+            return response()->json('Dados do cliente atualizados');
         } catch (\Throwable $th) {
             return response()->json($th->getMessage());
         }

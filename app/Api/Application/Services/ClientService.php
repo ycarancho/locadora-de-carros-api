@@ -48,8 +48,20 @@ class ClientService implements IClientService
     {
         return $this->clientRepository->findClient($request->input('client_id'));
     }
-    public function updateClient($request)
+    public function updateClient($request): void
     {
+        $this->guard->check(!preg_match($this->regexCPF, $request->input('cpf')), 'Formato invalido de CPF');
+        $this->guard->check(!preg_match($this->regexRG, $request->input('rg')), 'Formato invalido de RG');
+        $this->guard->check(!preg_match($this->regexCEL, $request->input('telefone')), 'Formato invalido de Telefone Celular');
+
+        $client = $this->clientRepository->findClient($request->input('client_id'));
+
+        foreach ($client->getAttributes() as $key => $value) {
+            if ($key != 'created_at' && $key != 'id') {
+                $client->$key = $request->input($key);
+            }
+        }
+        $this->clientRepository->updateClient($client);
     }
     public function deleteClient($request): void
     {

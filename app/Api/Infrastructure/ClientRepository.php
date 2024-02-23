@@ -24,8 +24,12 @@ class ClientRepository implements IClientRepository
     {
         return $this->client->where('id', $client_id)->first();
     }
-    public function updateClient($request)
+    public function updateClient(Client $client): void
     {
+        DB::transaction(function() use($client){
+            $client->updated_at = now('America/Sao_paulo');
+            $client->update();
+        });
     }
     public function deleteClient($request): void
     {
